@@ -5,7 +5,6 @@
  */
 package coiltracker;
 
-import java.awt.event.KeyEvent;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -229,6 +229,7 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
             this.jTextArea1.setText("Mod\tChanged\n");
             this.jTextArea1.append("-----------------------------------\n");
             TestSize();
+            Collections.sort(history, new DateChangedComparator());
             for (CoilChanged s : history) {
                 output.writeObject(s);
 //                System.out.println(s);
