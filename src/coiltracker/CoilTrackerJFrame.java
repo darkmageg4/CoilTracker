@@ -75,6 +75,7 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
         jTextFieldMod2SinceLast = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
 
         jComboBoxVape.setToolTipText("");
 
