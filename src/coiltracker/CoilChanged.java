@@ -4,24 +4,24 @@ import java.io.Serializable;
 
 public class CoilChanged implements Serializable {
 
-    private Mods name;
+    private String name;
     private String dateChanged;
 
     public CoilChanged() {
-        this.name = Mods.Pockex1;
+        this.name = "";
         this.dateChanged = "";
     }
 
-    public CoilChanged(Mods name, String dateChanged) {
+    public CoilChanged(String name, String dateChanged) {
         this.name = name;
         this.dateChanged = dateChanged;
     }
 
-    public Mods getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Mods name) {
+    public void setName(String name) {
         this.name = name;
     }
 

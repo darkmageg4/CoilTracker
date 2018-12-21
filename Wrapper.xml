@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>D:\Libraries\Coding\CoilTracker\dist\CoilTracker.jar</jar>
-  <outfile>D:\Libraries\Coding\CoilTracker\CoilTracker.exe</outfile>
+  <jar>D:\Libraries\Coding\CoilTracker V2\dist\CoilTracker.jar</jar>
+  <outfile>D:\Libraries\Coding\CoilTracker V2\CoilTracker.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>

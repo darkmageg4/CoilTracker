@@ -1,10 +1,11 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template coils, choose Tools | Templates
  * and open the template in the editor.
  */
 package coiltracker;
 
+import java.awt.Toolkit;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,6 +21,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,10 +32,12 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
 
     CoilChanged coilChanged;
     ArrayList<CoilChanged> history = new ArrayList<>();
-
     ArrayList<CoilChanged> tmp = new ArrayList<>();
+    ArrayList<Mod> mod = new ArrayList<>();
+    ArrayList<Mod> modtmp = new ArrayList<>();
 
-    File file = new File("CoilTracker.ct");
+    File coils = new File("CoilTracker.ct");
+    File mods = new File("Mods.ct");
 
     /**
      * Creates new form CoilTrackerJFrame
@@ -42,10 +47,19 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
 
         coilChanged = new CoilChanged();
         this.setTitle("Coil Tracker");
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("CoilTracker.png")));
 
-        this.jComboBoxVape.addItem(Mods.Pockex1);
-        this.jComboBoxVape.addItem(Mods.Pockex2);
-        
+//        this.jComboBoxVape.addItem(Mods.Pockex1);
+//        this.jComboBoxVape.addItem(Mods.Pockex2);
+        LoadMods();
+        this.jComboBoxMods.removeAllItems();
+        this.jComboBoxVape.removeAllItems();
+        for (Mod s : mod) {
+            this.jComboBoxVape.addItem(s);
+//            System.out.printf("%s\n", s);
+            this.jComboBoxMods.addItem(s);
+        }
+
         Load();
         Comparison();
 
@@ -67,12 +81,13 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
         jButtonSave = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jButtonRemove = new javax.swing.JButton();
+        jButtonDelete = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jLabelMod1Label = new javax.swing.JLabel();
-        jLabelMod2Label = new javax.swing.JLabel();
-        jTextFieldMod1SinceLast = new javax.swing.JTextField();
-        jTextFieldMod2SinceLast = new javax.swing.JTextField();
+        jComboBoxMods = new javax.swing.JComboBox();
+        jButtonAddMod = new javax.swing.JButton();
+        jButtonRemoveMod = new javax.swing.JButton();
+        jTextFieldSinceLast = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -92,22 +107,41 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
         });
 
         jTextArea1.setEditable(false);
-        jTextArea1.setColumns(14);
-        jTextArea1.setRows(5);
+        jTextArea1.setColumns(10);
+        jTextArea1.setRows(8);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jButtonRemove.setText("Remove");
-        jButtonRemove.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDelete.setText("Delete");
+        jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonRemoveActionPerformed(evt);
+                jButtonDeleteActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Time since last change");
 
-        jLabelMod1Label.setText("Pockex1");
+        jComboBoxMods.setSelectedIndex(-1);
+        jComboBoxMods.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxModsItemStateChanged(evt);
+            }
+        });
 
-        jLabelMod2Label.setText("Pockex2");
+        jButtonAddMod.setText("Add");
+        jButtonAddMod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddModActionPerformed(evt);
+            }
+        });
+
+        jButtonRemoveMod.setText("Remove");
+        jButtonRemoveMod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRemoveModActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Mods");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,21 +156,21 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
                         .addComponent(jLabel1)
                         .addComponent(jComboBoxVape, 0, 168, Short.MAX_VALUE)
                         .addComponent(jTextFieldDateChanged))
-                    .addComponent(jButtonRemove))
+                    .addComponent(jButtonDelete))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel3)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelMod1Label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldMod1SinceLast))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabelMod2Label)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextFieldMod2SinceLast)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel3)
+                        .addComponent(jComboBoxMods, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jButtonAddMod)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jButtonRemoveMod))
+                        .addComponent(jTextFieldSinceLast))
+                    .addComponent(jLabel4))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -154,7 +188,7 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonSave)
                         .addGap(18, 18, 18)
-                        .addComponent(jButtonRemove)
+                        .addComponent(jButtonDelete)
                         .addGap(0, 18, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -162,13 +196,15 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxMods, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldSinceLast, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabelMod1Label)
-                                    .addComponent(jTextFieldMod1SinceLast, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabelMod2Label)
-                                    .addComponent(jTextFieldMod2SinceLast, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jButtonAddMod)
+                                    .addComponent(jButtonRemoveMod))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(jScrollPane1))))
                 .addContainerGap())
@@ -178,28 +214,68 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        if (!"".equals(this.jTextFieldDateChanged.getText())){
-        history.add(new CoilChanged((Mods) this.jComboBoxVape.getSelectedItem(), this.jTextFieldDateChanged.getText()));
-
+        if (!"".equals(this.jTextFieldDateChanged.getText())) {
+            String d = this.jTextFieldDateChanged.getText();
+            boolean test = isValidDate(d);
+            if (test == false) {
+                JOptionPane.showMessageDialog(this, "That's not a valid date!", "Invalid Entry", JOptionPane.ERROR_MESSAGE);
+            } else {
+                history.add(new CoilChanged(this.jComboBoxVape.getSelectedItem().toString(), this.jTextFieldDateChanged.getText()));
+                System.out.println(test);
+            }
         } else {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
-        String today = sdf.format(new Date());
-        history.add(new CoilChanged((Mods) this.jComboBoxVape.getSelectedItem(), today.toString()));    
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy");
+            String today = sdf.format(new Date());
+            history.add(new CoilChanged(this.jComboBoxVape.getSelectedItem().toString(), today.toString()));
         }
-                Save();
+        Save();
 
     }//GEN-LAST:event_jButtonSaveActionPerformed
 
-    private void jButtonRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveActionPerformed
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
         // TODO add your handling code here:
         int i = history.size() - 1;
         history.remove(i);
         Save();
-    }//GEN-LAST:event_jButtonRemoveActionPerformed
+    }//GEN-LAST:event_jButtonDeleteActionPerformed
+
+    private void jButtonAddModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddModActionPerformed
+        // TODO add your handling code here:
+        String modName = (JOptionPane.showInputDialog(this, "Mod Name:", "Add Mod", JOptionPane.QUESTION_MESSAGE));
+        if (!"".equals(modName) && modName != null) {
+            mod.add(new Mod(modName));
+            SaveMods();
+        }
+
+    }//GEN-LAST:event_jButtonAddModActionPerformed
+
+    private void jButtonRemoveModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveModActionPerformed
+        // TODO add your handling code here:
+        JComboBox rem = new JComboBox();
+        rem.removeAllItems();
+        for (Mod s : mod) {
+            rem.addItem(s);
+        }
+
+        int remove = JOptionPane.showConfirmDialog(this, rem, "Which Mod?", JOptionPane.OK_CANCEL_OPTION, JOptionPane.DEFAULT_OPTION);
+        try {
+            if (remove == 0) {
+                mod.remove(rem.getSelectedIndex());
+                SaveMods();
+            }
+        } catch (Exception ex) {
+        }
+
+    }//GEN-LAST:event_jButtonRemoveModActionPerformed
+
+    private void jComboBoxModsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxModsItemStateChanged
+        // TODO add your handling code here:
+        Comparison();
+    }//GEN-LAST:event_jComboBoxModsItemStateChanged
 
     private void Load() {
         try {
-            FileInputStream fi = new FileInputStream(file);
+            FileInputStream fi = new FileInputStream(coils);
             ObjectInputStream input = new ObjectInputStream(fi);
 
             while (true) {
@@ -223,9 +299,35 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
 
     }
 
+    private void LoadMods() {
+        try {
+            FileInputStream fi = new FileInputStream(mods);
+            ObjectInputStream input = new ObjectInputStream(fi);
+
+            while (true) {
+                Mod s = (Mod) input.readObject();
+                modtmp.add(s);
+            }
+
+        } catch (EOFException ex) {
+            //Fuck off error
+        } catch (IOException | ClassNotFoundException ex) {
+        }
+
+        mod.addAll(modtmp);
+        this.jComboBoxVape.removeAllItems();
+        this.jComboBoxMods.removeAllItems();
+        for (Mod s : mod) {
+            this.jComboBoxVape.addItem(s);
+//            System.out.printf("%s\n", s);
+            this.jComboBoxMods.addItem(s);
+        }
+
+    }
+
     private void Save() {
         try {
-            FileOutputStream fo = new FileOutputStream(file);
+            FileOutputStream fo = new FileOutputStream(coils);
             ObjectOutputStream output = new ObjectOutputStream(fo);
             this.jTextArea1.setText("Mod\tChanged\n");
             this.jTextArea1.append("-----------------------------------\n");
@@ -242,9 +344,31 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
         }
 
         Comparison();
-
         this.jTextFieldDateChanged.setText("");
-        this.jComboBoxVape.setSelectedItem(Mods.Pockex1);
+        this.jComboBoxVape.setSelectedIndex(0);
+    }
+
+    private void SaveMods() {
+        try {
+            FileOutputStream fo = new FileOutputStream(mods);
+            ObjectOutputStream output = new ObjectOutputStream(fo);
+            this.jComboBoxVape.removeAllItems();
+            this.jComboBoxMods.removeAllItems();
+//            Collections.sort(history, new DateChangedComparator());
+            for (Mod s : mod) {
+                output.writeObject(s);
+//                System.out.println(s);
+                this.jComboBoxVape.addItem(s);
+                this.jComboBoxMods.addItem(s);
+
+            }
+            output.close();
+            fo.close();
+        } catch (IOException ex) {
+        }
+
+        Comparison();
+        this.jComboBoxVape.setSelectedIndex(0);
     }
 
     /**
@@ -264,20 +388,19 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
      */
     private void Comparison() {
         try {
-            this.jTextFieldMod1SinceLast.setText("");
-            this.jTextFieldMod2SinceLast.setText("");
-            // Compare PockeX1
+            this.jTextFieldSinceLast.setText("");
+            // Compare Mods with last entry of mod
             int i = history.size() - 1;
             while (true) {
-                String p1 = Mods.Pockex1.toString();
-                String dA = history.get(i).getName().toString();
+                String p1 = this.jComboBoxMods.getSelectedItem().toString();
+                String dA = history.get(i).getName();
                 if (dA.equals(p1)) {
                     try {
                         Date today = new Date();
                         Date last = new SimpleDateFormat("dd/MM/yy").parse(history.get(i).getDateChanged());
                         long diff = (today.getTime() % last.getTime());
                         int days = (int) TimeUnit.MILLISECONDS.toDays(diff);
-                        this.jTextFieldMod1SinceLast.setText(String.format("%d days", days));
+                        this.jTextFieldSinceLast.setText(String.format("%d days", days));
                         break;
                     } catch (ParseException ex) {
                         Logger.getLogger(CoilTrackerJFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -285,31 +408,21 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
                 } else {
                     i--;
                 }
-            }
-            // Compare PockeX2
-            i = history.size() - 1;
-            while (true) {
-                String p1 = Mods.Pockex2.toString();
-                String dA = history.get(i).getName().toString();
-                if (dA.equals(p1)) {
-                    try {
-                        Date today = new Date();
-                        Date last = new SimpleDateFormat("dd/MM/yy").parse(history.get(i).getDateChanged());
-                        long diff = (today.getTime() % last.getTime());
-                        int days = (int) TimeUnit.MILLISECONDS.toDays(diff);
-                        this.jTextFieldMod2SinceLast.setText(String.format("%d days", days));
-                        break;
-                    } catch (ParseException ex) {
-                        Logger.getLogger(CoilTrackerJFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                } else {
-                    i--;
-                }
-
             }
         } catch (Exception ex) {
         }
     }
+    
+    private boolean isValidDate(String d) {
+    SimpleDateFormat myDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    myDateFormat.setLenient(false);
+    try {
+        myDateFormat.parse(d);
+    } catch (ParseException e) {
+        return false;
+    }
+    return true;
+}
 
     /**
      * @param args the command line arguments
@@ -347,19 +460,19 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonRemove;
+    private javax.swing.JButton jButtonAddMod;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonRemoveMod;
     private javax.swing.JButton jButtonSave;
+    private javax.swing.JComboBox jComboBoxMods;
     private javax.swing.JComboBox jComboBoxVape;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabelMod1Label;
-    private javax.swing.JLabel jLabelMod2Label;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField jTextFieldDateChanged;
-    private javax.swing.JTextField jTextFieldMod1SinceLast;
-    private javax.swing.JTextField jTextFieldMod2SinceLast;
+    private javax.swing.JTextField jTextFieldSinceLast;
     // End of variables declaration//GEN-END:variables
 }
-
