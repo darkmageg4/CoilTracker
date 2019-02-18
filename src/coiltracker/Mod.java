@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Mod implements Serializable {
-    
-            ArrayList<Mod> mod = new ArrayList<>();
+
+    ArrayList<Mod> mod = new ArrayList<>();
 
     private String name;
 
@@ -28,14 +28,10 @@ public class Mod implements Serializable {
     public void setMod(ArrayList<Mod> mod) {
         this.mod = mod;
     }
-    
-    
 
     @Override
     public String toString() {
-        return String.format("%s",this.name);
+        return String.format("%s", this.name);
     }
-    
-    
 
 }

@@ -98,6 +98,8 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Date Changed");
 
+        jTextFieldDateChanged.setToolTipText("Defaults to today if left blank");
+
         jButtonSave.setText("Save");
         jButtonSave.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
@@ -112,6 +114,7 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jButtonDelete.setText("Delete");
+        jButtonDelete.setToolTipText("Removes last entry in the list");
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteActionPerformed(evt);
@@ -120,7 +123,6 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Time since last change");
 
-        jComboBoxMods.setSelectedIndex(-1);
         jComboBoxMods.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 jComboBoxModsItemStateChanged(evt);
@@ -128,6 +130,7 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
         });
 
         jButtonAddMod.setText("Add");
+        jButtonAddMod.setToolTipText("Add mod");
         jButtonAddMod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAddModActionPerformed(evt);
@@ -135,6 +138,7 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
         });
 
         jButtonRemoveMod.setText("Remove");
+        jButtonRemoveMod.setToolTipText("Remove mod");
         jButtonRemoveMod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRemoveModActionPerformed(evt);
@@ -189,7 +193,7 @@ public class CoilTrackerJFrame extends javax.swing.JFrame {
                         .addComponent(jButtonSave)
                         .addGap(18, 18, 18)
                         .addComponent(jButtonDelete)
-                        .addGap(0, 18, Short.MAX_VALUE))
+                        .addGap(0, 28, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -1,0 +1,21 @@
+;Auto-generated Diamond Directive File. Can be deleted without harm.
+.Set CabinetNameTemplate=D:\Libraries\Coding\CoilTracker V2\Installer\iExpress\~CoilTracker.CAB
+.Set CompressionType=LZX
+.Set CompressionLevel=7
+.Set InfFileName=D:\Libraries\Coding\CoilTracker V2\Installer\iExpress\~CoilTracker_LAYOUT.INF
+.Set RptFileName=D:\Libraries\Coding\CoilTracker V2\Installer\iExpress\~CoilTracker.RPT
+.Set MaxDiskSize=CDROM
+.Set ReservePerCabinetSize=0
+.Set InfCabinetLineFormat=*cab#*=Application Source Media,*cabfile*,0
+.Set Compress=on
+.Set CompressionMemory=21
+.Set DiskDirectoryTemplate=
+.Set Cabinet=ON
+.Set MaxCabinetSize=999999999
+.Set InfDiskHeader=
+.Set InfDiskLineFormat=
+.Set InfCabinetHeader=[SourceDisksNames]
+.Set InfFileHeader=
+.Set InfFileHeader1=[SourceDisksFiles]
+.Set InfFileLineFormat=*file*=*cab#*,,*size*,*csum*
+D:\Libraries\Coding\CoilTracker V2\CoilTracker.exe
